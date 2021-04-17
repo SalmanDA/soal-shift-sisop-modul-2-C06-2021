@@ -256,6 +256,25 @@ Langkah pertama untuk pengerjaan soal 2C disuruh untuk memindahkan foto dari fol
 
 Untuk yang 2C DoublePets (foto memiliki lebih dari satu peliharaan) :
 
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+- petIdentity[0] berisi category pet
+- petIdentity[1] berisi nama pet
+- petIdentity[2] berisi umur pet
+
+```
+			// Get petIdentity
+                        int i = 0;
+                        strcpy(doublePets, temp2);
+                        char *temp3 = strtok(doublePets, ";");
+
+                        while(temp3 != NULL)
+                        {
+                            strcpy(petIdentity[i], temp3);
+                            temp3 = strtok(NULL, ";");
+                            i++;
+                        }
+```
+
 Pakailah variable folderCategory untuk membuat path folder per jenis peliharaan dalam foto dan fileDirDoublePets.
 
 ```
@@ -328,4 +347,243 @@ Langkah terakhir adalah rename file dengan bantuan command mv.
                         /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
 ```
 
-Untuk file yang hanya berisi 
+Untuk file yang hanya berisi satu peliharaan hewan maka lebih mudah dari step doublePets yang diatas.
+Langsung pindahkan dengan mv memakai variable, fileDir dan folderCategory.
+
+```
+ 		    /** Number 2C Answer (Move) **/
+                    // This condition is used to handle moving picture to folder Pet Category
+                    if (childProcess = fork() == 0)
+                    {
+                        printf("Moving %s to %s\n", fileDir, folderCategory);
+                        char *args[] = {"mv", fileDir, folderCategory, NULL};
+                        execv("/bin/mv", args);
+                    }
+                    /** End of Number 2C Answer (Move) **/
+```
+
+Kemudian beri sleep untuk menunda process dan lanjutkan process berikutnya yaitu menyiapkan variable newFileName untuk renaming file nantinya.
+
+```
+		    sleep(1);
+                    
+                    // Copy and Append string to create newFileName with pet's name
+                    strcpy(newFileName, folderCategory);
+                    strcat(newFileName, "/");
+                    strcat(newFileName, petIdentity[1]);
+                    strcat(newFileName, ".jpg");
+```
+		
+Manipulasi folderCategory menjadi directory foto setelah di move ke folder jenis peliharaan masing-masing.
+
+```
+		    // Append string to locate originalFile path
+                    strcat(folderCategory, "/");
+                    strcat(folderCategory, dirFile->d_name);
+```
+
+Berikutnya rename file dengan bantuan mv.
+
+```
+		    /** Number 2C Answer (Rename) **/
+                    // This condition is to handle renaming file
+                    if (childProcess = fork() == 0)
+                    {
+                        printf("Renaming %s to %s\n\n", folderCategory, newFileName);
+                        char *args[] = {"mv", folderCategory, newFileName, NULL};
+                        execv("/bin/mv", args);
+                    }
+                    /** End of Number 2C Answer (Rename) **/
+```
+		    
+### 2D
+Dalam soal 2D diminta untuk memisah sebuah peliharaan dan memindahkannya ke masing-masing folder kategori sesuai jenis peliharaan.
+
+Untuk mengerjakan soal 2D, karena langsung mengikut hint soal dengan mengecek apakah nama foto mengandung "_", kalau iya berarti foto tersebut mengandung 2 peliharaan.
+
+```
+		/** --Number 2D Answer-- **/
+                // This condition to check if jpeg contain 2 pets or not
+                if (strchr(dirFile->d_name, '_'))
+                {
+```
+
+Pisahkan identitas peliharaan dengan menggunakan temp2 dengan break string jika ketemu '_'.
+
+```
+		    // Split 2 pet identity on same jpeg
+                    char *temp2 = strtok(dirFile->d_name, "_");
+                    while(temp2 != NULL)
+                    {
+```
+
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+- petIdentity[0] berisi category pet
+- petIdentity[1] berisi nama pet
+- petIdentity[2] berisi umur pet
+
+```
+			// Get petIdentity
+                        int i = 0;
+                        strcpy(doublePets, temp2);
+                        char *temp3 = strtok(doublePets, ";");
+
+                        while(temp3 != NULL)
+                        {
+                            strcpy(petIdentity[i], temp3);
+                            temp3 = strtok(NULL, ";");
+                            i++;
+                        }
+```
+
+Tambahkan kondisi jika mengandung ".jpg" hilangkan string ".jpg" dengan cara berikut.
+
+```
+			// This condition to check if in last petIdentity has .jpg or not
+                        if(strstr(petIdentity[2], ".jpg"))
+                        {
+                            strtok(petIdentity[2], "j");
+                            petIdentity[2][strlen(petIdentity[2])-1] = '\0'; 
+                        }
+```
+
+Jika sudah dipisahkan, berarti ambil variable fileDirDoublePets dan manipulasi menjadi directory foto original setelah di unzip.
+
+```
+ 			// Copy and Append fileDirDoublePets to locate filePath after unzip
+                        strcpy(fileDirDoublePets, "modul2/petshop/");
+                        strcat(fileDirDoublePets, temp2);
+```
+
+Cek apakah string mengandung ".jpg" atau tidak, ini terjadi karena jika membagi menjadi 2 bagian di nama file ada yang dapet string ".jpg" ada yang tidak, jika tidak memiliki ".jpg" maka bisa ditambahkan.
+
+```
+			// condition to check string contain jpg or not
+                        if(!strstr(temp2, ".jpg"))
+                        {
+                            strcat(fileDirDoublePets, ".jpg"); 
+                        }
+```
+
+Menurut kami karena lebih mudah mengcopy file tersebut untuk setiap hewan peliharaan di 1 foto, maka copy file baru dengan nama hewan masing2 di 1 foto tersebut.
+
+```
+			// Condition to copy jpg for each other pet (if it's contain double pet)
+                        if (childProcess = fork() == 0)
+                        {
+                            char *args[] = {"cp", fileDir, fileDirDoublePets, NULL};
+                            execv("/bin/cp", args);
+                        }
+```
+
+Kemudian beri sleep untuk menunda process dan lanjutkan process berikutnya yaitu menyiapkan variable newFileName untuk renaming file nantinya.
+
+```
+		    sleep(1);
+                    
+                    // Copy and Append string to create newFileName with pet's name
+                    strcpy(newFileName, folderCategory);
+                    strcat(newFileName, "/");
+                    strcat(newFileName, petIdentity[1]);
+                    strcat(newFileName, ".jpg");
+```
+
+Langkah berikutnya memanipulasi string supaya folderCategory menjadi directory dari file yang sudah dipindah kedalam folder jenis peliharaan.
+
+```
+			// Condition to check if temp2 contain jpg or not
+                        strcat(folderCategory, "/");
+                        strcat(folderCategory, temp2);
+                        if(!strstr(temp2, ".jpg"))
+                        {
+                            strcat(folderCategory, ".jpg"); 
+                        }
+                        
+```
+
+Langkah terakhir adalah rename file dengan bantuan command mv.
+
+```
+			/** --Number 2C Answer (rename) [type: doublePet]-- **/
+                        // Condition to rename file with pet's name
+                        if (childProcess = fork() == 0)
+                        {
+                            printf("Renaming %s to %s\n\n", folderCategory, newFileName);
+                            char *args[] = {"mv", folderCategory, newFileName, NULL};
+                            execv("/bin/mv", args);
+                        }
+                        /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
+```
+
+Jangan lupa untuk menghapus file original yang masih memiliki namafile 2 peliharaan awal.
+
+```
+ 		    sleep(1);
+
+                    // Condition to remove original picture after unzip
+                    if (childProcess = fork() == 0)
+                    {
+                        char *args[] = {"rm", fileDir, NULL};
+                        execv("/bin/rm", args);
+                    }
+```
+
+### 2E
+Dalam soal 2E diminta untuk membuat file keterangan.txt dan mengisinya dengan nama dan umur peliharaan yang ada difoto.
+Untuk pengerjaan dibagi 2 yaitu 2E bagian foto yang memiliki 2 peliharaan atau 1.
+
+Untuk yang memiliki 2 hewan peliharaan dalam satu foto :
+Dalam code kami, jawaban nomer 2E berada pada fungsi loop  while(temp2 != NULL) dibawah looping nomer 2D.
+Untuk langkah awal pengerjaan kami memanipulasi string menggunakan variable fileDirTxt untuk membuat keterangan.txt disetiap folder jenis peliharaan.
+
+```
+			// Create file keterangan.txt to store petIdentity
+                        strcpy(fileDirTxt, folderCategory);
+                        strcat(fileDirTxt, "/keterangan.txt");
+```
+
+Siapkan petIdentity seperti yang sudah ada di nomer 2D.
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+- petIdentity[0] berisi category pet
+- petIdentity[1] berisi nama pet
+- petIdentity[2] berisi umur pet
+
+```
+			// Get petIdentity
+                        int i = 0;
+                        strcpy(doublePets, temp2);
+                        char *temp3 = strtok(doublePets, ";");
+
+                        while(temp3 != NULL)
+                        {
+                            strcpy(petIdentity[i], temp3);
+                            temp3 = strtok(NULL, ";");
+                            i++;
+                        }
+```
+
+Tambahkan kondisi jika mengandung ".jpg" hilangkan string ".jpg" dengan cara berikut.
+
+```
+			// This condition to check if in last petIdentity has .jpg or not
+                        if(strstr(petIdentity[2], ".jpg"))
+                        {
+                            strtok(petIdentity[2], "j");
+                            petIdentity[2][strlen(petIdentity[2])-1] = '\0'; 
+                        }
+```
+
+Langkah terakhir langsung ke File Handling dengan menulis nama dan umur dari petIdentity variable yang sudah disiapkan tadi.
+
+```
+			// File handling to write and add petIdentity
+                        printf("Write %s's identity on keterangan.txt files\n", petIdentity[1]);
+                        FILE *fptr;
+                        fptr = fopen(fileDirTxt, "a");
+                        fprintf(fptr, "nama : %s\n", petIdentity[1]);
+                        fprintf(fptr, "umur : %s\n\n", petIdentity[2]);
+                        fclose(fptr);
+                        /** --End of Number 2E Answer [type: doublePet]-- **/
+```
+
+Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya mirip seperti yang 2 hewan 1 foto diatas, yang membedakan hanya variable temp3 diganti temp2. (karena temp3 gadibutuhin di 1 peliharaan 1 foto, cukup gunakan variable temp2).
