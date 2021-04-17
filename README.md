@@ -171,4 +171,80 @@ Setelah kondisi diatas semua terpenuhi dan berhasil, maka kami menggunakan child
 ### 2C
 Untuk memudahkan pengerjaan kami sengaja mengerjakan 2C terakhir, jadi dalam program kami setelah 2D dan 2E selesai dikerjakan barulah kami mengerjakan soal 2C, karena pada soal 2C kami disuruh untuk memindahkan foto ke folder pada saat, Pada kasus kami untuk menjelaskan soal 2C karena pengerjaan terakhir asumsikan 2D dan 2E sudah selesai dikerjakan.
 
-Langkah pertama untuk pengerjaan soal 2C disuruh untuk memindahkan foto dari folder setelah extract ke dalam folder jenis peliharaan yang telah dibuat pada soal 2B sesuai jenis peliharaan yang ada pada foto. Karena pada kasus kami sudah mengerjakan soal 2D dan 2E terlebih dahulu maka, kami sudah membagi antara pets.
+Langkah pertama untuk pengerjaan soal 2C disuruh untuk memindahkan foto dari folder setelah extract ke dalam folder jenis peliharaan yang telah dibuat pada soal 2B sesuai jenis peliharaan yang ada pada foto. Karena pada kasus kami sudah mengerjakan soal 2D dan 2E terlebih dahulu maka, kami sudah membagi antara foto yang memiliki peliharaan hanya 1 atau lebih dengan mengecek apakah string memiliki char "_" atau tidak.
+
+Untuk yang 2C DoublePets (foto memiliki lebih dari satu peliharaan) :
+
+Pakailah variable folderCategory untuk membuat path folder per jenis peliharaan dalam foto dan fileDirDoublePets.
+
+```
+ 			// Copy and Append fileDirDoublePets to locate filePath after unzip
+                        strcpy(fileDirDoublePets, "modul2/petshop/");
+                        strcat(fileDirDoublePets, temp2);
+```
+
+Kemudian Cek apakah temp2 mempunyai .jpg atau tidak (ini terjadi karena jika 1 file memiliki 2 peliharaan setelah dipisah oleh "_" maka ada nama yang tidak memiliki .jpg. Jika tidak punya maka tambahkan ".jpg" dibelakang untuk penamaan file.
+
+```
+			// condition to check string contain jpg or not
+                        if(!strstr(temp2, ".jpg"))
+                        {
+                            strcat(fileDirDoublePets, ".jpg"); 
+                        }
+```
+
+Kemudian pindahkan file dengan "mv" dari directory setelah unzip ke dalam folder kategori per jenis peliharaan yang ada di dalam foto.
+
+```
+			/** --Number 2C Answer (move) [type: doublePet]-- **/
+                        // Condition to move picture to pet's category
+                        if (childProcess = fork() == 0)
+                        {
+                            strcpy(folderCategory,"modul2/petshop/");
+                            strcpy(temp, temp2);
+                            strcat(folderCategory, strtok(temp, ";"));
+
+                            char *args[] = {"mv", fileDirDoublePets, folderCategory, NULL};
+                            execv("/bin/mv", args);
+                        }
+                        /** --End of Number 2C Answer (move) [type: doublePet]-- **/
+```
+
+Langkah selanjutnya adalah menyiapkan variable newFileName untuk penamaan file baru berdasarkan nama dari peliharaan tersebut.
+
+```
+			// Copy and Append newFileName to create new picture name based on pet's name
+                        strcpy(newFileName, folderCategory);
+                        strcat(newFileName, "/");
+                        strcat(newFileName, petIdentity[1]);
+                        strcat(newFileName, ".jpg");
+```
+
+Langkah berikutnya memanipulasi string supaya folderCategory menjadi directory dari file yang sudah dipindah kedalam folder jenis peliharaan.
+
+```
+			// Condition to check if temp2 contain jpg or not
+                        strcat(folderCategory, "/");
+                        strcat(folderCategory, temp2);
+                        if(!strstr(temp2, ".jpg"))
+                        {
+                            strcat(folderCategory, ".jpg"); 
+                        }
+                        
+```
+
+Langkah terakhir adalah rename file dengan bantuan command mv.
+
+```
+			/** --Number 2C Answer (rename) [type: doublePet]-- **/
+                        // Condition to rename file with pet's name
+                        if (childProcess = fork() == 0)
+                        {
+                            printf("Renaming %s to %s\n\n", folderCategory, newFileName);
+                            char *args[] = {"mv", folderCategory, newFileName, NULL};
+                            execv("/bin/mv", args);
+                        }
+                        /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
+```
+
+Untuk file yang hanya berisi 
