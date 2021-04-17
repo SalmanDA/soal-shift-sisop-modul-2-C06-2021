@@ -1,5 +1,86 @@
 # soal-shift-sisop-modul-2-C06-2021
 
+## Laporan Soal Nomor 1 :
+
+### Penjelasan soal
+Pada soal ini kami diminta untuk membuat tiga folder dengan nama "Musyik", "Fylm", dan "Pyoto". Kemudian mendownload tiga file .zip dari tiga link dan di ekstrak. File-file hasil ekstrak dipindahkan ke dalam folder yang telah dibuat. Semua kegiatan ini dilakukan secara otomatis pada tanggal 9 April 2021 pukul 16:22:00, yaitu 6 jam sebelum ulang tahun Stevany. Tepat pada saat ulang tahun Stevany, semua folder yang dibuat zip dengan nama Lopyu_Stevany.zip dan folder folder kosong lainnya akan dihapus.
+
+### Program Process
+Untuk menyelesaikan soal nomor 1, kami membuat fungsi-fungsi untuk melakukan kegiatan yang telah disebutkan.
+
+### 2a, 2b dan 2c
+Fungsi yang pertama adalah fungsi yang digunakan untuk pembuatan folder, mendownload file, dan mengekstrak file. Untuk menyelesaikannya, kami menggunakan struktur process fork sebagai berikut:
+
+```
+void prepare(){
+	pid_t child = fork();
+	int status;
+
+	if(child<0) exit(EXIT_FAILURE);
+
+	if(child==0){
+		pid_t child1 = fork();
+		int status1;
+
+		if(child1<0) exit(EXIT_FAILURE);
+
+		if(child1==0){ // membuat folder
+			char *argv[]={"mkdir","-p",dir[0], dir[1], dir[2], NULL};
+	            	execv("/bin/mkdir",argv);
+		} else { 
+			while((wait(&status1)) > 0);
+			pid_t child2 = fork();
+			int status2;
+			
+			if(child2<0) exit(EXIT_FAILURE);
+			
+			if(child2==0){// download dan unzip musik
+				pid_t child3 = fork();
+				int status3;
+			
+				if(child3<0) exit(EXIT_FAILURE);
+			
+				if(child3==0){
+					char *argv[] = {"wget", gdrive[0], "-O", nama_zip[0], NULL};
+		        		execv("/usr/bin/wget",argv);
+				} else {
+					while((wait(&status3)) > 0);
+					sleep(5);
+					char *argv[] = {"unzip", nama_zip[0], NULL};
+					execv("/usr/bin/unzip", argv);
+//					sleep(5);
+				}
+                ...
+}
+```
+Pada fungsi ini, fork yang pertama akan membuat folder-folder yang diminta. Fork kedua akan mendownload dan mengekstrak file, demikian juga fork ketiga dan keempat.
+
+### 2d
+Untuk memindah file, juga menggunakan struktur process fork yang ahmpir sama seperti di atas. Kami menggunakan fung find dan mv untuk memindahkan fill-file yang telah diekstrak. Berikut implementasinya:
+
+```
+void move_files(){
+	pid_t moves = fork();
+	int move_status;
+
+	if(moves<0) exit(EXIT_FAILURE);
+	
+	if(moves==0){
+		pid_t moves1 = fork();
+		int move_status1;
+
+		if(moves1<0) exit(EXIT_FAILURE);
+		
+		if(moves1==0){
+			char *argv[] = {"find", fold[0], "-type","f","-exec","mv","{}",dir[0],";", NULL};
+	                execv("/usr/bin/find", argv);
+		} else {
+        ...
+}
+```
+
+Jadi, fork pertama digunakan untuk memindah file dari folder "MUSIK" ke folder "Musyik". Fork kedua digunakan untuk memindah file dari "FILM" ke "Fylm". Dan yang terakhir digunakan untuk memindahkan file dari "FOTO" ke "Pyoto".
+
 ## Laporan Soal Nomor 2 :
 
 ### Program Process
