@@ -136,8 +136,8 @@ Langkah awal untuk menyelesaikan soal 2A, memakai condition parent process untuk
     {
         printf("\n--Start soal2.c C06 Program--\n");
         printf("Creating modul2/petshop folder\n");
-        char *arg[] = {"mkdir", "-p", "modul2/petshop", NULL};
-        execv("/bin/mkdir", arg);
+        char *commandLinuxArg[] = {"mkdir", "-p", "modul2/petshop", NULL};
+        execv("/bin/mkdir", commandLinuxArg);
     }
 ```
 
@@ -148,8 +148,8 @@ Kemudian, setelah berhasil membuat folder baru, gunakan childProcess pertama unt
     else if (firstChildProcessId == 0 && secondChildProcessId > 0)
     {
         printf("Unzipping jpg files on pets.zip\n");
-        char *argv[] = {"unzip", "pets.zip", "*.jpg", "-d", "modul2/petshop", NULL};
-        execv("/bin/unzip", argv);
+        char *commandLinuxArgv[] = {"unzip", "pets.zip", "*.jpg", "-d", "modul2/petshop", NULL};
+        execv("/bin/unzip", commandLinuxArgv);
     }
 ```
 
@@ -243,8 +243,8 @@ Setelah kondisi diatas semua terpenuhi dan berhasil, maka kami menggunakan child
                 if (childProcess = fork() == 0)
                 {
                     printf("Creating folder on %s\n", folderCategory);
-                    char *args[] = {"mkdir", "-p", folderCategory, NULL};
-                    execv("/bin/mkdir", args);
+                    char *commandLinuxArgs[] = {"mkdir", "-p", folderCategory, NULL};
+                    execv("/bin/mkdir", commandLinuxArgs);
                 }
                 /** --End of Number 2B Answer-- **/
 ```
@@ -304,8 +304,8 @@ Kemudian pindahkan file dengan "mv" dari directory setelah unzip ke dalam folder
                             strcpy(temp, temp2);
                             strcat(folderCategory, strtok(temp, ";"));
 
-                            char *args[] = {"mv", fileDirDoublePets, folderCategory, NULL};
-                            execv("/bin/mv", args);
+                            char *commandLinuxArgs[] = {"mv", fileDirDoublePets, folderCategory, NULL};
+                            execv("/bin/mv", commandLinuxArgs);
                         }
                         /** --End of Number 2C Answer (move) [type: doublePet]-- **/
 ```
@@ -341,8 +341,8 @@ Langkah terakhir adalah rename file dengan bantuan command mv.
                         if (childProcess = fork() == 0)
                         {
                             printf("Renaming %s to %s\n\n", folderCategory, newFileName);
-                            char *args[] = {"mv", folderCategory, newFileName, NULL};
-                            execv("/bin/mv", args);
+                            char *commandLinuxArgs[] = {"mv", folderCategory, newFileName, NULL};
+                            execv("/bin/mv", commandLinuxArgs);
                         }
                         /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
 ```
@@ -356,8 +356,8 @@ Langsung pindahkan dengan mv memakai variable, fileDir dan folderCategory.
                     if (childProcess = fork() == 0)
                     {
                         printf("Moving %s to %s\n", fileDir, folderCategory);
-                        char *args[] = {"mv", fileDir, folderCategory, NULL};
-                        execv("/bin/mv", args);
+                        char *commandLinuxArgs[] = {"mv", fileDir, folderCategory, NULL};
+                        execv("/bin/mv", commandLinuxArgs);
                     }
                     /** End of Number 2C Answer (Move) **/
 ```
@@ -390,8 +390,8 @@ Berikutnya rename file dengan bantuan mv.
                     if (childProcess = fork() == 0)
                     {
                         printf("Renaming %s to %s\n\n", folderCategory, newFileName);
-                        char *args[] = {"mv", folderCategory, newFileName, NULL};
-                        execv("/bin/mv", args);
+                        char *commandLinuxArgs[] = {"mv", folderCategory, newFileName, NULL};
+                        execv("/bin/mv", commandLinuxArgs);
                     }
                     /** End of Number 2C Answer (Rename) **/
 ```
@@ -471,8 +471,8 @@ Menurut kami karena lebih mudah mengcopy file tersebut untuk setiap hewan peliha
 			// Condition to copy jpg for each other pet (if it's contain double pet)
                         if (childProcess = fork() == 0)
                         {
-                            char *args[] = {"cp", fileDir, fileDirDoublePets, NULL};
-                            execv("/bin/cp", args);
+                            char *commandLinuxArgs[] = {"cp", fileDir, fileDirDoublePets, NULL};
+                            execv("/bin/cp", commandLinuxArgs);
                         }
 ```
 
@@ -509,8 +509,8 @@ Langkah terakhir adalah rename file dengan bantuan command mv.
                         if (childProcess = fork() == 0)
                         {
                             printf("Renaming %s to %s\n\n", folderCategory, newFileName);
-                            char *args[] = {"mv", folderCategory, newFileName, NULL};
-                            execv("/bin/mv", args);
+                            char *commandLinuxArgs[] = {"mv", folderCategory, newFileName, NULL};
+                            execv("/bin/mv", commandLinuxArgs);
                         }
                         /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
 ```
@@ -523,8 +523,8 @@ Jangan lupa untuk menghapus file original yang masih memiliki namafile 2 pelihar
                     // Condition to remove original picture after unzip
                     if (childProcess = fork() == 0)
                     {
-                        char *args[] = {"rm", fileDir, NULL};
-                        execv("/bin/rm", args);
+                        char *commandLinuxArgs[] = {"rm", fileDir, NULL};
+                        execv("/bin/rm", commandLinuxArgs);
                     }
 ```
 
