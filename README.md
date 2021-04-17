@@ -447,4 +447,62 @@ Jangan lupa untuk menghapus file original yang masih memiliki namafile 2 pelihar
                     }
 ```
 
-	
+### 2E
+Dalam soal 2E diminta untuk membuat file keterangan.txt dan mengisinya dengan nama dan umur peliharaan yang ada difoto.
+Untuk pengerjaan dibagi 2 yaitu 2E bagian foto yang memiliki 2 peliharaan atau 1.
+
+Untuk yang memiliki 2 hewan peliharaan dalam satu foto :
+Dalam code kami, jawaban nomer 2E berada pada fungsi loop  while(temp2 != NULL) dibawah looping nomer 2D.
+Untuk langkah awal pengerjaan kami memanipulasi string menggunakan variable fileDirTxt untuk membuat keterangan.txt disetiap folder jenis peliharaan.
+
+```
+			// Create file keterangan.txt to store petIdentity
+                        strcpy(fileDirTxt, folderCategory);
+                        strcat(fileDirTxt, "/keterangan.txt");
+```
+
+Siapkan petIdentity seperti yang sudah ada di nomer 2D.
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+- petIdentity[0] berisi category pet
+- petIdentity[1] berisi nama pet
+- petIdentity[2] berisi umur pet
+
+```
+			// Get petIdentity
+                        int i = 0;
+                        strcpy(doublePets, temp2);
+                        char *temp3 = strtok(doublePets, ";");
+
+                        while(temp3 != NULL)
+                        {
+                            strcpy(petIdentity[i], temp3);
+                            temp3 = strtok(NULL, ";");
+                            i++;
+                        }
+```
+
+Tambahkan kondisi jika mengandung ".jpg" hilangkan string ".jpg" dengan cara berikut.
+
+```
+			// This condition to check if in last petIdentity has .jpg or not
+                        if(strstr(petIdentity[2], ".jpg"))
+                        {
+                            strtok(petIdentity[2], "j");
+                            petIdentity[2][strlen(petIdentity[2])-1] = '\0'; 
+                        }
+```
+
+Langkah terakhir langsung ke File Handling dengan menulis nama dan umur dari petIdentity variable yang sudah disiapkan tadi.
+
+```
+			// File handling to write and add petIdentity
+                        printf("Write %s's identity on keterangan.txt files\n", petIdentity[1]);
+                        FILE *fptr;
+                        fptr = fopen(fileDirTxt, "a");
+                        fprintf(fptr, "nama : %s\n", petIdentity[1]);
+                        fprintf(fptr, "umur : %s\n\n", petIdentity[2]);
+                        fclose(fptr);
+                        /** --End of Number 2E Answer [type: doublePet]-- **/
+```
+
+Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya mirip seperti yang 2 hewan 1 foto diatas, yang membedakan hanya variable temp3 diganti temp2. (karena temp3 gadibutuhin di 1 peliharaan 1 foto, cukup gunakan variable temp2).
