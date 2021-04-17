@@ -103,3 +103,70 @@ Dengan bantuan looping nantinya kita dapat mengecek file apa saja yang berada di
             {
 ```
 
+Langkah selanjutnya untuk mengerjakan soal 2B sampai 2E dibutuhkan beberapa variable untuk memanipulasi penamaan file untuk data yang diminta oleh soal, maka dari itu kami membuat beberapa variable untuk menyelesaikan soal (NOTE : variable ini berlaku sampai 2E karena 2B - 2E dikerjakan dalam 1 looping), keterangan penggunaan variable sudah kami tuliskan di dalam code.
+
+```
+                /**
+                 * @Variable Info : 
+                 * folderCategory : String --> this variable is used to store directory folder per pets category
+                 * temp : String --> this variable is used to temporary store dir->d_name and strtok by ";" to get pet's category name
+                 * fileDir : String --> this variable is used to store files jpg directory after unzip
+                 * fileDirDoublePets : String --> this variable is used to store files jpg directory when in picture there are 2 pets 
+                 * doublePets : String --> this variable is used to store temporary file name for double pets in the picture
+                 * fileDirTxt : String --> this variable is used to store directory file to create keterangan.txt on folder modul2/petshop
+                 * petIdentity : String (doubleArray) --> this variable used to store petCategory;petName;petAge from file name
+                 * newFileName : String --> this variable used to store newFileName to rename file with pet's name
+                 * tempFileName : String --> this variable used to store temporary file name, used later to get petIdentity like category;name;age
+                **/
+                char folderCategory[256];
+                char temp[256];
+                char fileDir[256];
+                char fileDirDoublePets[256];
+                char doublePets[256];
+                char fileDirTxt[256];
+                char petIdentity[3][256];
+                char newFileName[256];
+                char tempFileName[256];
+```     
+
+Langkah berikutnya adalah karena looping ini dapat mendeteksi bukan hanya file melainkan juga directory seperti "." dan ".." maka untuk hanya looping file .jpg yang diperlukan pada soal, kami mengakalinya dengan cara berikut.
+
+```
+                // Condition to skip name listing while dir gets folder not files
+                if ( !strcmp( dirFile->d_name, "."  )) continue;
+                if ( !strcmp( dirFile->d_name, ".." )) continue;
+```
+
+Setelah lewat dari kondisi diatas, maka dirFile sudah pasti hanya berisi file .jpg. Berikutnya, Copy dan Tambahkan string untuk membuat directory file path ke lokasi jpg saat file pertama kali di extract yaitu di /modul2/petshop/
+
+```
+                // Copy and Append string fileDir to create path to jpeg after unzip
+                strcpy(fileDir, "modul2/petshop/");
+                strcat(fileDir, dirFile->d_name);
+```
+
+Selanjutnya gunakan variable folderCategory untuk pemindahan file jpg berdasarkan jenis peliharaan yang ada di foto tersebut. Kami menggunakan strtok untuk break string pada saat bertemu ";" karena kategori jenis peliharaan berada pada nama file pertama sebelum char ';'.
+
+```
+                // Copy and Append string name to create directory Folder per Pet's Category
+                strcpy(folderCategory,"modul2/petshop/");
+                strcpy(temp, dirFile->d_name);
+		        strcat(folderCategory, strtok(temp, ";"));
+```
+
+Setelah kondisi diatas semua terpenuhi dan berhasil, maka kami menggunakan childProcess baru untuk exec command pembuatan folder jenis peliharaan.
+
+```
+                /** --Number 2B Answer-- **/
+                // This condition to create folder per Pet Category
+                if (childProcess = fork() == 0)
+                {
+                    printf("Creating folder on %s\n", folderCategory);
+                    char *args[] = {"mkdir", "-p", folderCategory, NULL};
+                    execv("/bin/mkdir", args);
+                }
+                /** --End of Number 2B Answer-- **/
+```
+
+### 2C
+Untuk memudahkan pengerjaan kami sengaja mengerjakan 2C terakhir, jadi dalam program kami setelah 2D dan 2E selesai dikerjakan barulah kami mengerjakan soal 2C, karena pada soal 2C kami disuruh untuk memindahkan foto ke folder pada saat. 
