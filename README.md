@@ -8,7 +8,7 @@ Pada soal ini kami diminta untuk membuat tiga folder dengan nama "Musyik", "Fylm
 ### Program Process
 Untuk menyelesaikan soal nomor 1, kami membuat fungsi-fungsi untuk melakukan kegiatan yang telah disebutkan.
 
-### 2a, 2b dan 2c
+### 1a, 1b dan 1c
 Fungsi yang pertama adalah fungsi yang digunakan untuk pembuatan folder, mendownload file, dan mengekstrak file. Untuk menyelesaikannya, kami menggunakan struktur process fork sebagai berikut:
 
 ```
@@ -55,7 +55,7 @@ void prepare(){
 ```
 Pada fungsi ini, fork yang pertama akan membuat folder-folder yang diminta. Fork kedua akan mendownload dan mengekstrak file, demikian juga fork ketiga dan keempat.
 
-### 2d
+### 1d
 Untuk memindah file, juga menggunakan struktur process fork yang ahmpir sama seperti di atas. Kami menggunakan fung find dan mv untuk memindahkan fill-file yang telah diekstrak. Berikut implementasinya:
 
 ```
