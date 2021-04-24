@@ -249,6 +249,9 @@ Setelah kondisi diatas semua terpenuhi dan berhasil, maka kami menggunakan child
                 /** --End of Number 2B Answer-- **/
 ```
 
+### Output 2B
+![Output2B](/img/2b.png)
+
 ### 2C
 Untuk memudahkan pengerjaan kami sengaja mengerjakan 2C terakhir, jadi dalam program kami setelah 2D dan 2E selesai dikerjakan barulah kami mengerjakan soal 2C, karena pada soal 2C kami disuruh untuk memindahkan foto ke folder pada saat, Pada kasus kami untuk menjelaskan soal 2C karena pengerjaan terakhir asumsikan 2D dan 2E sudah selesai dikerjakan.
 
@@ -407,6 +410,9 @@ Berikutnya rename file dengan bantuan mv.
                     }
                     /** End of Number 2C Answer (Rename) **/
 ```
+
+### Output 2C
+![Output2C](/img/2c.png)
 		    
 ### 2D
 Dalam soal 2D diminta untuk memisah sebuah peliharaan dan memindahkannya ke masing-masing folder kategori sesuai jenis peliharaan.
@@ -575,6 +581,10 @@ Jangan lupa untuk menghapus file original yang masih memiliki namafile 2 pelihar
                     }
 ```
 
+### Output 2D
+![Output2D_1](/img/2d1.png)
+![Output2D_2](/img/2d2.png)
+
 ### 2E
 Dalam soal 2E diminta untuk membuat file keterangan.txt dan mengisinya dengan nama dan umur peliharaan yang ada difoto.
 Untuk pengerjaan dibagi 2 yaitu 2E bagian foto yang memiliki 2 peliharaan atau 1.
@@ -669,3 +679,6 @@ Langkah terakhir langsung ke File Handling dengan menulis nama dan umur dari pet
 ```
 
 Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya mirip seperti yang 2 hewan 1 foto diatas, yang membedakan hanya cara mengambil identitas hewannya saja diganti temp2. (karena temp3 gadibutuhin di 1 peliharaan 1 foto, cukup gunakan variable temp2).
+
+### Output 2E
+![Output2E](/img/2e.png)
