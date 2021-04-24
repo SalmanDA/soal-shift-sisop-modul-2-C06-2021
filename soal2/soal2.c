@@ -109,43 +109,77 @@ int main()
                 if (strchr(dirFile->d_name, '_'))
                 {
                     // Split 2 pet identity on same jpeg
+                    strcat(dirFile->d_name, "_");
                     char *temp2 = strtok(dirFile->d_name, "_");
                     while(temp2 != NULL)
                     {
-                        /** --Number 2E Answer [type: doublePet]-- **/
-                        // Create file keterangan.txt to store petIdentity
-                        strcpy(fileDirTxt, folderCategory);
-                        strcat(fileDirTxt, "/keterangan.txt");
+                        sleep(1);
 
                         // Get petIdentity
-                        int i = 0;
                         strcpy(doublePets, temp2);
-                        char *temp3 = strtok(doublePets, ";");
+                        int index = 0;
+                        int x;
 
-                        while(temp3 != NULL)
+                        sleep(1);
+
+                        // Get Pet's Category
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[0][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[0][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Name
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[1][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[1][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Age
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!='\0' && doublePets[index]!='j'){
+                            // strcpy(petIdentity[2][x], doublePets[i]);
+                            petIdentity[2][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[2][x] = '\0';
+
+                        // Delete last char '.' on pet's age
+                        if (petIdentity[2][x-1] == '.')
                         {
-                            strcpy(petIdentity[i], temp3);
-                            temp3 = strtok(NULL, ";");
-                            i++;
+                            petIdentity[2][x-1] = '\0';
                         }
 
-                        // This condition to check if in last petIdentity has .jpg or not
-                        if(strstr(petIdentity[2], ".jpg"))
-                        {
-                            strtok(petIdentity[2], "j");
-                            petIdentity[2][strlen(petIdentity[2])-1] = '\0'; 
-                        }
+                        sleep(1);
+
+                        /** --Number 2E Answer [type: doublePet]-- **/
+                        // Create file keterangan.txt to store petIdentity
+                        strcpy(fileDirTxt, "modul2/petshop/");
+                        strcat(fileDirTxt, petIdentity[0]);
+                        strcat(fileDirTxt, "/keterangan.txt");
 
                         // File handling to write and add petIdentity
                         printf("Write %s's identity on keterangan.txt files\n", petIdentity[1]);
                         FILE *fptr;
                         fptr = fopen(fileDirTxt, "a");
                         fprintf(fptr, "nama : %s\n", petIdentity[1]);
-                        fprintf(fptr, "umur : %s\n\n", petIdentity[2]);
+                        fprintf(fptr, "umur : %s tahun\n\n", petIdentity[2]);
                         fclose(fptr);
                         /** --End of Number 2E Answer [type: doublePet]-- **/
 
-                        // Copy and Append fileDirDoublePets to locate filePath after unzip
+                        // // Copy and Append fileDirDoublePets to locate filePath after unzip
                         strcpy(fileDirDoublePets, "modul2/petshop/");
                         strcat(fileDirDoublePets, temp2);
 
@@ -155,7 +189,9 @@ int main()
                             strcat(fileDirDoublePets, ".jpg"); 
                         }
 
-                        printf("Moving %s\n", fileDirDoublePets);
+                        printf("Moving and Renaming %s\n\n", fileDirDoublePets);
+
+                        sleep(1);
 
                         // Condition to copy jpg for each other pet (if it's contain double pet)
                         if (childProcess = fork() == 0)
@@ -167,12 +203,13 @@ int main()
                         sleep(1);
 
                         // Copy and Append newFileName to create new picture name based on pet's name
-                        strcpy(newFileName, folderCategory);
+                        strcpy(newFileName, "modul2/petshop/");
+                        strcat(newFileName, petIdentity[0]);
                         strcat(newFileName, "/");
                         strcat(newFileName, petIdentity[1]);
                         strcat(newFileName, ".jpg");
 
-                        /** --Number 2C Answer (move) [type: doublePet]-- **/
+                        /** --Number 2C Answer (move and rename) [type: doublePet]-- **/
                         // Condition to move picture to pet's category
                         if (childProcess = fork() == 0)
                         {
@@ -180,30 +217,13 @@ int main()
                             strcpy(temp, temp2);
                             strcat(folderCategory, strtok(temp, ";"));
 
-                            char *commandLinuxArgs[] = {"mv", fileDirDoublePets, folderCategory, NULL};
+                            char *commandLinuxArgs[] = {"mv", fileDirDoublePets, newFileName, NULL};
                             execv("/bin/mv", commandLinuxArgs);
                         }
-                        /** --End of Number 2C Answer (move) [type: doublePet]-- **/
+                        /** --End of Number 2C Answer (move and rename) [type: doublePet]-- **/
 
                         sleep(1);
 
-                        // Condition to check if temp2 contain jpg or not
-                        strcat(folderCategory, "/");
-                        strcat(folderCategory, temp2);
-                        if(!strstr(temp2, ".jpg"))
-                        {
-                            strcat(folderCategory, ".jpg"); 
-                        }
-                        
-                        /** --Number 2C Answer (rename) [type: doublePet]-- **/
-                        // Condition to rename file with pet's name
-                        if (childProcess = fork() == 0)
-                        {
-                            printf("Renaming %s to %s\n\n", folderCategory, newFileName);
-                            char *commandLinuxArgs[] = {"mv", folderCategory, newFileName, NULL};
-                            execv("/bin/mv", commandLinuxArgs);
-                        }
-                        /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
                         temp2 = strtok(NULL, "_");
                     }
 
@@ -245,7 +265,7 @@ int main()
                     FILE *fptr;
                     fptr = fopen(fileDirTxt, "a");
                     fprintf(fptr, "nama : %s\n", petIdentity[1]);
-                    fprintf(fptr, "umur : %s\n\n", petIdentity[2]);
+                    fprintf(fptr, "umur : %s tahun\n\n", petIdentity[2]);
                     fclose(fptr);
                     /** End of Number 2E Answer **/
 
