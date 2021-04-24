@@ -256,58 +256,81 @@ Langkah pertama untuk pengerjaan soal 2C disuruh untuk memindahkan foto dari fol
 
 Untuk yang 2C DoublePets (foto memiliki lebih dari satu peliharaan) :
 
-Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian lanjutkan looping untuk mengambil data selanjutnya. PetIdentity variable memiliki keterangan, yaitu : 
 - petIdentity[0] berisi category pet
 - petIdentity[1] berisi nama pet
 - petIdentity[2] berisi umur pet
 
 ```
 			// Get petIdentity
-                        int i = 0;
                         strcpy(doublePets, temp2);
-                        char *temp3 = strtok(doublePets, ";");
+                        int index = 0;
+                        int x;
 
-                        while(temp3 != NULL)
+                        sleep(1);
+
+                        // Get Pet's Category
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[0][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[0][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Name
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[1][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[1][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Age
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!='\0' && doublePets[index]!='j'){
+                            // strcpy(petIdentity[2][x], doublePets[i]);
+                            petIdentity[2][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[2][x] = '\0';
+			
+			// Delete last char '.' on pet's age
+                        if (petIdentity[2][x-1] == '.')
                         {
-                            strcpy(petIdentity[i], temp3);
-                            temp3 = strtok(NULL, ";");
-                            i++;
+                            petIdentity[2][x-1] = '\0';
                         }
 ```
 
-Pakailah variable folderCategory untuk membuat path folder per jenis peliharaan dalam foto dan fileDirDoublePets.
-
+Langkah selanjutnya menyiapkan variable fileDirDoublePets untuk lokasi file setelah unzip.
 ```
- 			// Copy and Append fileDirDoublePets to locate filePath after unzip
+			// // Copy and Append fileDirDoublePets to locate filePath after unzip
                         strcpy(fileDirDoublePets, "modul2/petshop/");
                         strcat(fileDirDoublePets, temp2);
-```
 
-Kemudian Cek apakah temp2 mempunyai .jpg atau tidak (ini terjadi karena jika 1 file memiliki 2 peliharaan setelah dipisah oleh "_" maka ada nama yang tidak memiliki .jpg. Jika tidak punya maka tambahkan ".jpg" dibelakang untuk penamaan file.
-
-```
-			// condition to check string contain jpg or not
+                        // condition to check string contain jpg or not
                         if(!strstr(temp2, ".jpg"))
                         {
                             strcat(fileDirDoublePets, ".jpg"); 
                         }
 ```
 
-Kemudian pindahkan file dengan "mv" dari directory setelah unzip ke dalam folder kategori per jenis peliharaan yang ada di dalam foto.
-
+Kemudian Copy file terlebih dahulu untuk memisahkan 2 hewan dalam foto tersebut.
 ```
-			/** --Number 2C Answer (move) [type: doublePet]-- **/
-                        // Condition to move picture to pet's category
+			// Condition to copy jpg for each other pet (if it's contain double pet)
                         if (childProcess = fork() == 0)
                         {
-                            strcpy(folderCategory,"modul2/petshop/");
-                            strcpy(temp, temp2);
-                            strcat(folderCategory, strtok(temp, ";"));
-
-                            char *commandLinuxArgs[] = {"mv", fileDirDoublePets, folderCategory, NULL};
-                            execv("/bin/mv", commandLinuxArgs);
+                            char *commandLinuxArgs[] = {"cp", fileDir, fileDirDoublePets, NULL};
+                            execv("/bin/cp", commandLinuxArgs);
                         }
-                        /** --End of Number 2C Answer (move) [type: doublePet]-- **/
 ```
 
 Langkah selanjutnya adalah menyiapkan variable newFileName untuk penamaan file baru berdasarkan nama dari peliharaan tersebut.
@@ -320,31 +343,20 @@ Langkah selanjutnya adalah menyiapkan variable newFileName untuk penamaan file b
                         strcat(newFileName, ".jpg");
 ```
 
-Langkah berikutnya memanipulasi string supaya folderCategory menjadi directory dari file yang sudah dipindah kedalam folder jenis peliharaan.
-
+Kemudian pindahkan dan ganti nama file sesuai kriteria soal.
 ```
-			// Condition to check if temp2 contain jpg or not
-                        strcat(folderCategory, "/");
-                        strcat(folderCategory, temp2);
-                        if(!strstr(temp2, ".jpg"))
-                        {
-                            strcat(folderCategory, ".jpg"); 
-                        }
-                        
-```
-
-Langkah terakhir adalah rename file dengan bantuan command mv.
-
-```
-			/** --Number 2C Answer (rename) [type: doublePet]-- **/
-                        // Condition to rename file with pet's name
+			/** --Number 2C Answer (move and rename) [type: doublePet]-- **/
+                        // Condition to move picture to pet's category
                         if (childProcess = fork() == 0)
                         {
-                            printf("Renaming %s to %s\n\n", folderCategory, newFileName);
-                            char *commandLinuxArgs[] = {"mv", folderCategory, newFileName, NULL};
+                            strcpy(folderCategory,"modul2/petshop/");
+                            strcpy(temp, temp2);
+                            strcat(folderCategory, strtok(temp, ";"));
+
+                            char *commandLinuxArgs[] = {"mv", fileDirDoublePets, newFileName, NULL};
                             execv("/bin/mv", commandLinuxArgs);
                         }
-                        /** --End of Number 2C Answer (rename) [type: doublePet]-- **/
+                        /** --End of Number 2C Answer (move and rename) [type: doublePet]-- **/
 ```
 
 Untuk file yang hanya berisi satu peliharaan hewan maka lebih mudah dari step doublePets yang diatas.
@@ -417,22 +429,57 @@ Pisahkan identitas peliharaan dengan menggunakan temp2 dengan break string jika 
                     {
 ```
 
-Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian lanjutkan looping untuk mengambil data selanjutnya. PetIdentity variable memiliki keterangan, yaitu : 
 - petIdentity[0] berisi category pet
 - petIdentity[1] berisi nama pet
 - petIdentity[2] berisi umur pet
 
 ```
 			// Get petIdentity
-                        int i = 0;
                         strcpy(doublePets, temp2);
-                        char *temp3 = strtok(doublePets, ";");
+                        int index = 0;
+                        int x;
 
-                        while(temp3 != NULL)
+                        sleep(1);
+
+                        // Get Pet's Category
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[0][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[0][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Name
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[1][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[1][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Age
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!='\0' && doublePets[index]!='j'){
+                            // strcpy(petIdentity[2][x], doublePets[i]);
+                            petIdentity[2][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[2][x] = '\0';
+			
+			// Delete last char '.' on pet's age
+                        if (petIdentity[2][x-1] == '.')
                         {
-                            strcpy(petIdentity[i], temp3);
-                            temp3 = strtok(NULL, ";");
-                            i++;
+                            petIdentity[2][x-1] = '\0';
                         }
 ```
 
@@ -543,22 +590,57 @@ Untuk langkah awal pengerjaan kami memanipulasi string menggunakan variable file
 ```
 
 Siapkan petIdentity seperti yang sudah ada di nomer 2D.
-Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian loop dengan variable temp3. PetIdentity variable memiliki keterangan, yaitu : 
+Ambil petIdentity untuk mengambil identitas pet menggunakan looping dengan break setiap bertemu ';', kemudian lanjutkan looping untuk mengambil data selanjutnya. PetIdentity variable memiliki keterangan, yaitu : 
 - petIdentity[0] berisi category pet
 - petIdentity[1] berisi nama pet
 - petIdentity[2] berisi umur pet
 
 ```
 			// Get petIdentity
-                        int i = 0;
                         strcpy(doublePets, temp2);
-                        char *temp3 = strtok(doublePets, ";");
+                        int index = 0;
+                        int x;
 
-                        while(temp3 != NULL)
+                        sleep(1);
+
+                        // Get Pet's Category
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[0][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[0][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Name
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!=';') {
+                            petIdentity[1][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[1][x] = '\0';
+
+                        sleep(1);
+
+                        // Get Pet's Age
+                        index++;
+                        x = 0;
+                        while(doublePets[index]!='\0' && doublePets[index]!='j'){
+                            // strcpy(petIdentity[2][x], doublePets[i]);
+                            petIdentity[2][x] = doublePets[index];
+                            index++;
+                            x++;
+                        }
+                        petIdentity[2][x] = '\0';
+			
+			// Delete last char '.' on pet's age
+                        if (petIdentity[2][x-1] == '.')
                         {
-                            strcpy(petIdentity[i], temp3);
-                            temp3 = strtok(NULL, ";");
-                            i++;
+                            petIdentity[2][x-1] = '\0';
                         }
 ```
 
@@ -581,9 +663,9 @@ Langkah terakhir langsung ke File Handling dengan menulis nama dan umur dari pet
                         FILE *fptr;
                         fptr = fopen(fileDirTxt, "a");
                         fprintf(fptr, "nama : %s\n", petIdentity[1]);
-                        fprintf(fptr, "umur : %s\n\n", petIdentity[2]);
+                        fprintf(fptr, "umur : %s tahun\n\n", petIdentity[2]);
                         fclose(fptr);
                         /** --End of Number 2E Answer [type: doublePet]-- **/
 ```
 
-Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya mirip seperti yang 2 hewan 1 foto diatas, yang membedakan hanya variable temp3 diganti temp2. (karena temp3 gadibutuhin di 1 peliharaan 1 foto, cukup gunakan variable temp2).
+Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya mirip seperti yang 2 hewan 1 foto diatas, yang membedakan hanya cara mengambil identitas hewannya saja diganti temp2. (karena temp3 gadibutuhin di 1 peliharaan 1 foto, cukup gunakan variable temp2).
