@@ -81,6 +81,93 @@ void move_files(){
 
 Jadi, fork pertama digunakan untuk memindah file dari folder "MUSIK" ke folder "Musyik". Fork kedua digunakan untuk memindah file dari "FILM" ke "Fylm". Dan yang terakhir digunakan untuk memindahkan file dari "FOTO" ke "Pyoto".
 
+### 1E
+Setelah membuat fungsi-fungsi untuk dijalankan, tinggal jalankan fungsi tersebut dengan memanggilnya, kemudian komputer akan mengerjakan bagian 1A hingga 1D.
+
+```
+prepare();
+move_files();
+```
+
+### 1F
+Berikutnya, kita diminta untuk memindahkan tiga folder yang telah dibuat ke dalam file zip dan menghapus folder sisanya. Untuk melakukannya, kami juga membuat fungsi sebgai berikut:
+
+```
+void day_D(){
+	pid_t day_id = fork();
+	int day_status;
+
+	if(day_id<0) exit(EXIT_FAILURE);
+		
+	if(day_id==0){
+		pid_t day1 = fork();
+        	int dstatus1;
+       	 
+        	if(day1<0) exit(EXIT_FAILURE);
+
+        	if(day1==0){
+            		char *argv[]={"zip","-mr","Lopyu_Stevany",dir[0], dir[1], dir[2], NULL};
+              	 	execv("/usr/bin/zip",argv);
+        	}
+        	else{
+            		while((wait(&dstatus1)) > 0);
+            		char *argv[]={"rm","-rf","MUSIK", "FOTO", "FILM", NULL};
+            		execv("/bin/rm",argv);
+        	}   
+	} else {
+		while((wait(&day_status)) > 0);
+	    	return;
+	} 
+}
+```
+
+Jadi pada fungsi tersebut kami membuat fork yang digunakan untuk memindahkan tiga folder yang telah dibuat dengan menggunakan fungsi zip. Setelah itu, fork yang berikutnya akan menghapus folder yang tersisa dengan menggunakan "rm". Terakhir tinggal panggil saja fungsi day_D untuk menjalankan fungsinya.
+
+### Pembagian waktu 1E dan 1F
+Karena 1E dan 1F dikerjakan pada waktu tertentu, maka perlu ada persyaratan dimana pada saat 6 jam sebelum ulang tahun Stevany akan menjalankan 1E dan tepat pada saat ulang tahun Stevany akan dijalankan 1F. Untuk hal tersebut dibuat variabel waktu yang akan digunakan untuk dibandingkan dengan waktu sekarang. Berikut implementasinya:
+
+```
+char task1[]="09-Apr 16:22";
+char task2[]="09-Apr 22:22";
+	    	
+time_t waktu =time(NULL);
+char ultah[99];
+struct tm *now = localtime(&waktu);
+strftime(ultah, sizeof(ultah), "%d-%b %H:%M", now);
+
+//time_t waktu;
+//struct tm* tm_skrg;
+
+//waktu = time(NULL);
+//tm_skrg = localtime(&waktu);
+
+if(strcmp(ultah,task1) == 0){
+	prepare();
+	move_files();
+} else 
+if(strcmp(ultah,task2) == 0){
+	day_D();
+}
+```
+
+### Output 1E
+![Output1E](/img/1e.png)
+
+Folder Fylm
+
+![Output1E](/img/1e_fylm.png)
+
+Folder Myusik
+
+![Output1E](/img/1e_musyik.png)
+
+Folder Pyoto
+
+![Output1E](/img/1e_pyoto.png)
+
+### Output 1F
+![Output1F](/img/1f.png)
+
 ## Laporan Soal Nomor 2 :
 
 ### Program Process
