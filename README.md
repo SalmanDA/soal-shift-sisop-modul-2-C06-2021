@@ -769,3 +769,18 @@ Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya 
 
 ### Output 2E
 ![Output2E](/img/2e.png)
+
+### Soal 3A
+Pada soal ini kita diminta untuk membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
+
+### Soal 3B
+Setelah menyelesaikan soal 3A kita diminta untuk mengisi setiap direktori yang sudah dibuat dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
+
+### Soal 3C
+Setelah direktori tersebut sudah penuh dengan 10 gambar, kita diminta unutk menampilkan status message "Download Success" dalam "status.txt", yang kemudian message tersebut kita enkripsi menggunakan caecar cipher shift 5. file txt tersebut diletakkan di dalam direktori, kemudian kita zip direktori tersebut dan menghapus file originalnya.
+
+### Soal 3D
+Pada soal ini kita diminta unutk membuat program "Killer" yang executable,dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Program tersebut harus merupakan soal bash.
+
+### Soal 3E
+Kita diminta agar program dapat dijalankan di dalam dua mode. Untuk mengaktifkan mode pertama, program harus dijalankan dsdengan argumen -z, dan Ketika dijalankan dalam mode pertama, program utama akan langsung menghentikan semua operasinya Ketika program Killer dijalankan. Sedangkan untuk mengaktifkan mode kedua, program harus dijalankan dengan argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai
