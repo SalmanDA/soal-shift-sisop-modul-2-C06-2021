@@ -776,6 +776,17 @@ Pada soal ini kita diminta untuk membuat program yang membuat direktori dan mend
 ### Soal 3A
 Pada soal ini kita diminta untuk membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
 
+Untuk membuat directory tanpa menggunakan mkdir kita bisa menggunakan execv, seperti di bawah ini
+```
+	  char *argvmk[] = {"mkdir", "-p", folder, NULL};
+            execv("/bin/mkdir",argvmk);
+```
+
+### Output 3A
+output seperti directory yang di highlight
+![Output3A](/img/soal3_a.JPG)
+
+
 ### Soal 3B
 Setelah menyelesaikan soal 3A kita diminta untuk mengisi setiap direktori yang sudah dibuat dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
 
