@@ -818,6 +818,26 @@ output seperti directory yang di highlight
 ### Soal 3B
 Setelah menyelesaikan soal 3A kita diminta untuk mengisi setiap direktori yang sudah dibuat dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
 
+Untuk menjalankan perintah wget kita bisa menggunakan execl
+
+```
+	 execl("/usr/bin/wget", "wget", "-q","-O",imagepath, link,"", NULL);
+
+```
+
+Untuk mendapatkan link download yang sudah diubah sesuai ketentuan soal bisa dilakukan dengan menggungakn snprintf terhadap link utama 
+
+```
+	 int epoch = (int)time(NULL);
+                  epoch = (epoch % 1000)+100;
+	
+	 snprintf(link,sizeof link,"https://picsum.photos/%d.jpg",epoch);
+
+```
+
+### Output 3B
+![Output 3B](/img/Soal3_b.JPG)
+
 ### Soal 3C
 Setelah direktori tersebut sudah penuh dengan 10 gambar, kita diminta unutk menampilkan status message "Download Success" dalam "status.txt", yang kemudian message tersebut kita enkripsi menggunakan caecar cipher shift 5. file txt tersebut diletakkan di dalam direktori, kemudian kita zip direktori tersebut dan menghapus file originalnya.
 
