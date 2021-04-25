@@ -781,6 +781,34 @@ Untuk membuat directory tanpa menggunakan mkdir kita bisa menggunakan execv, sep
 	  char *argvmk[] = {"mkdir", "-p", folder, NULL};
             execv("/bin/mkdir",argvmk);
 ```
+Untuk mengubah current time menjadi format penamaan file kita bisa mengaplikasikannya seperti di bawah ini :
+
+```
+	Struct getTime(){
+   //setup time
+   time_t now;
+   time(&now);
+   struct tm *local = localtime(&now);
+   
+   Struct n;
+   
+   n.day = local->tm_mday;
+   //month start form 0 to 11           
+   n.month = local->tm_mon + 1;
+   // year start from 1900      
+   n.year = local->tm_year + 1900;  
+   n.hours = local->tm_hour;          
+   n.minutes = local->tm_min;        
+   n.seconds = local->tm_sec; 
+   
+   return n;
+
+};
+
+	 timeNow=getTime();
+	 snprintf(folder,sizeof folder,"%02d-%02d-%02d_%02d:%02d:%02d",timeNow.year,timeNow.month,timeNow.day,timeNow.hours,timeNow.minutes,timeNow.seconds);
+
+```
 
 ### Output 3A
 output seperti directory yang di highlight
