@@ -770,6 +770,9 @@ Untuk soal nomor 2E yang hanya mengandung 1 peliharaan di 1 foto, pengerjaannya 
 ### Output 2E
 ![Output2E](/img/2e.png)
 
+## Laporan Soal Nomor 3 :
+Pada soal ini kita diminta untuk membuat program yang membuat direktori dan mendownload 10 gambar dengan ukuran tertentu yang kemudian kita zip directory tersebut. Seiringan dengan proses tersebut kita juga diminta untuk membuat executable "killer.sh" untuk mengakhiri proses.
+
 ### Soal 3A
 Pada soal ini kita diminta untuk membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
 
