@@ -892,16 +892,16 @@ Sebelum program dijalankan, kita harus mengecheck dulu apakah saat dijalankan us
 ### Output 3E
 untuk penggunaan -x
 
-![Output 3E](/img/soal3_killer_x)
+![Output 3E](/img/soal3_killer_x.JPG)
 
 Disini proses wget masih perjalan hingga zip selesai
 
-![Output 3E](/img/soal3_killer_x_hasil)
+![Output 3E](/img/soal3_killer_x_hasil.JPG)
 
 untuk penggunaan -z
 
-![Output 3E](/img/soal3_killer_z)
+![Output 3E](/img/soal3_killer_z.JPG)
 
 Disini seluruh proses langsung berhenti total
 
-![Output 3E](/img/soal3_killer_z_hasil)
+![Output 3E](/img/soal3_killer_z_hasil.JPG)
