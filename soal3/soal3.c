@@ -1,169 +1,146 @@
-#include<stdio.h>
-#include<time.h>
-#include<sys/types.h>
-#include<sys/stat.h>
-#include<sys/wait.h>
-#include<stdlib.h>
-#include<fcntl.h>
-#include<errno.h>
-#include<string.h>
-#include<syslog.h>
-#include<unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <time.h>
+#include <string.h>
+#include <stdlib.h>
 
+struct waktu{
+   int hours, minutes, seconds, day, month, year;
+};
 
+typedef struct waktu Struct;
+Struct getTime(){
+   //setup time
+   time_t now;
+   time(&now);
+   struct tm *local = localtime(&now);
+   
+   Struct n;
+   
+   n.day = local->tm_mday;
+   //month start form 0 to 11           
+   n.month = local->tm_mon + 1;
+   // year start from 1900      
+   n.year = local->tm_year + 1900;  
+   n.hours = local->tm_hour;          
+   n.minutes = local->tm_min;        
+   n.seconds = local->tm_sec; 
+   
+   return n;
 
-char* cipher(char string[]){
-	int f;
-	for(f=0;string[f]!='\0';f++){
-		char queue = string[f];
-		if(queue>='A' && queue<='Z'){
-			queue+=5;
-			if(queue>'Z'){
-			queue=queue-'Z'+'A'-1;
+};
+
+void encrypt(char folder[]){
+   FILE *fp;
+   char txtpath[40];
+   snprintf(txtpath,sizeof txtpath,"./%s/status.txt",folder);
+   fp  = fopen (txtpath, "w");
+   int key=5;
+   //caesar cipher algorithm
+   char message[]="Download Success", ch;
+   for(int i = 0; message[i] != '\0'; ++i){
+		ch = message[i];
+		if(ch >= 'a' && ch <= 'z'){
+			ch = ch + key;
+			if(ch > 'z'){
+				ch = ch - 'z' + 'a' - 1;
 			}
-			string[f] = queue;
+			message[i] = ch;
 		}
-		else if(queue>='a' && queue<='z'){
-			queue+=5;
-			if(queue>'z'){
-			queue=queue-'z'+'a'-1;
+		else if(ch >= 'A' && ch <= 'Z'){
+			ch = ch + key;
+			if(ch > 'Z'){
+				ch = ch - 'Z' + 'A' - 1;
 			}
-			string[f] = queue;
+			message[i] = ch;
 		}
 	}
-	
-	return string;
+   //write to txt
+   printf("Download Success = %s\n",message);
+   for (int i = 0;i<16; i++) 
+      fputc(message[i], fp);
+   fclose(fp);
 }
 
-/*void createkill(const *char node){
-	FILE *fap;
-	fap = fopen("Killer.sh", "w+");
-	if(strcmp(node, "-z")==0){
-	fprintf(fap, "#!/bin/bash\n killall -9 ./3a\n echo \'program killed\'\n rm -r Killer.sh");
-	}
-	else if(strcmp(node, "-x")==0){
-	fprintf(fap, "#!/bin/bash\n kill %d \n echo \'program killed\'\n rm -r Killer.sh", getpid());
-	}	
-	
-}*/
+int main(int argc, char **argv){
+   // int createdir;
+   char image[30],folder[30],imagepath[100],link[50];
+   Struct timeNow;
+   pid_t pid, sid, parent_id;        
+   parent_id = getpid();
+   int status;
+   pid = fork();
+   sid = setsid();
 
-int main(int argc, char *argv[]){
-	if(argc!=2 || strcmp(argv[1], "-z")!=0 || strcmp(argv[1],"-x")!=0 )
-	{
-	printf("Invalid command\n");
-	exit(0);
-	}
-	
-	int node;
-	if(strcmp(argv[1],"-z")==0)node=1;
-	else if(strcmp(argv[1], "-x")==0)node=2;
-	
-	FILE *fap;
-	fap = fopen("Killer.sh", "w+");
-	fprintf("#!/bin/bash\n node=%d if [ $node -eq 1]\n then\n killall -9 ./3a\n else\n kill %d\n fi echo /`program killed/`\n rm -r Killer.sh", node, getpid()+1);
-	fclose(fap);
-	
-	
-	//createkill(node);
+   //exit after finish forking
+   if (pid > 0)
+      exit(EXIT_SUCCESS);
 
-	while(1){
-		time_t rawtime;
-		struct tm *info;
-		char buffer[80];
-	
-		time( &rawtime );
-	
-		info = localtime( &rawtime );
-	
-		strftime(buffer,80,"%Y-%m-%d_%H:%M:%S", info);
-		
-		char filename[100];
-		strcpy(filename,buffer);
-		strcat(filename,".zip");
-		
-	
-		pid_t pid_1;
-		
-		pid_1 = fork();
-		if(pid_1 < 0){
-		exit(EXIT_FAILURE);
-		}
-		if(pid_1 ==0){
-		//soal 3a
-		char *argv[] = {"mkdir", buffer, NULL};
-		execv("/bin/mkdir", argv);
-		}
-		
-		int status;
-		
-		while(wait(&status)>0);
-		
-		pid_t pid_2;
-		pid_2 = fork();
-		
-		if(pid_2 < 0){
-		exit(EXIT_FAILURE);
-		}
-		if(pid_2 == 0){
-		//soal 3b
-		chdir(buffer);
-		int i=0;
-		while(i<10){
-		time_t ctime = time(NULL);
-		struct tm *current;
-		char buffer2[80];
-		current = localtime( &ctime );
-		strftime(buffer2, 80, "%Y-%m-%d_%H:%M:%S", current);
-		char chphoto[1001];
-		sprintf(chphoto, "https://picsum.photos/%ld", (ctime % 1000) + 50);	
-		
-		pid_t pid_3;
-		pid_3 = fork();
-		
-		if(pid_3<0){
-		exit(EXIT_FAILURE);
-		}
-		if(pid_3==0){
-			char *arg[]={"wget", chphoto, "-O", buffer2, NULL};
-			execv("/bin/wget", arg);
-			}
-		i++;
-		sleep(5);
-		}
-		
-		//soal 3c
-		if(i>=0){
-		char meslog[100] = "Download Success";
-		char temp[100];
-		strcpy(temp, meslog);
-		cipher(temp);
-		strcpy(meslog,temp);
-		
-		FILE *fp;
-		
-		fp = fopen("status.txt","w+");
-		fputs(meslog, fp);
-		fclose(fp);
-		}
-		
-		chdir("..");
-		char zip[100];
-		strcpy(zip, filename);
-		
-		
-		pid_t pid_4;
-		if(pid_4=fork()<0){
-		exit(EXIT_FAILURE);
-		}
-		if(pid_4 == 0){
-			char *argl[]={"zip", "-r", zip, buffer, NULL};
-			execv("/bin/zip", argl);
-		}
-		char *arglp[]={"rm", "-r", buffer, NULL};
-		execv("/bin/rm", arglp);
-	}
-		
-	sleep(40);
-}	
+   FILE *killer;
+   killer = fopen("killer.sh", "w");
+   //when -z stop everything immediatly when -x stop after ziping
+   if (strcmp(argv[1], "-z") == 0)
+      fprintf(killer, "#!/bin/bash\nkill -9 -%d\n rm killer.sh", getpid());
+   else if (strcmp(argv[1], "-x") == 0)
+      fprintf(killer, "#!/bin/bash\nkill %d\n rm killer.sh", getpid());
+      
+   fclose(killer);
+   //to be executable bash
+   if(fork() == 0){
+      char *argvmod[] = {"chmod", "+x", "killer.sh", NULL};
+      execv("/bin/chmod", argvmod);
+   }
+   //close read input and write output
+   close(STDIN_FILENO);
+   close(STDOUT_FILENO);
+
+   while(1){
+      //take present time
+      timeNow=getTime();
+      //concate folder name
+      snprintf(folder,sizeof folder,"%02d-%02d-%02d_%02d:%02d:%02d",timeNow.year,timeNow.month,timeNow.day,timeNow.hours,timeNow.minutes,timeNow.seconds);
+      
+      pid_t child1,child2,child3;
+      child1=fork();
+      if(child1 == 0){
+         child2=fork();
+         if(child2==0){
+         // createdir= mkdir(folder, S_IRUSR | S_IRGRP | S_IROTH | S_IXUSR | S_IXGRP | S_IXOTH | S_IWUSR | S_IWGRP | S_IWGRP);
+            char *argvmk[] = {"mkdir", "-p", folder, NULL};
+            execv("/bin/mkdir",argvmk);
+         }
+         else{
+            while(wait(&status)>0);
+            // download image
+            for(int i=0;i<10;i++){
+               if(fork()==0){
+                  printf("Duar\n");
+                  //epoch time
+                  int epoch = (int)time(NULL);
+                  epoch = (epoch % 1000)+100;
+                  //update present time in every loop
+                  timeNow=getTime();
+                  //image naming
+                  snprintf(image,sizeof image,"%02d-%02d-%02d_%02d:%02d:%02d.jpg",timeNow.year,timeNow.month,timeNow.day,timeNow.hours,timeNow.minutes,timeNow.seconds);
+                  snprintf(imagepath,sizeof imagepath,"./%s/%s",folder,image); 
+                  snprintf(link,sizeof link,"https://picsum.photos/%d.jpg",epoch);
+                  //blank space due to bugs on wget that are redirecting to log file afterworth
+                  //ga ngerti epoch cuy
+                  execl("/usr/bin/wget", "wget", "-q","-O",imagepath, link,"", NULL);
+               }
+               sleep(5);
+            }
+            encrypt(folder);
+            //zip file
+            char zipfile[40];
+            snprintf(zipfile,sizeof zipfile,"%s.zip",folder);
+            execl("/usr/bin/zip","zip","-rm",zipfile,folder,"-x","*.c",NULL);
+         }
+      }
+      else sleep(40);
+   }
+   return 0;
 }
-
