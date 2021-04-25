@@ -841,8 +841,67 @@ Untuk mendapatkan link download yang sudah diubah sesuai ketentuan soal bisa dil
 ### Soal 3C
 Setelah direktori tersebut sudah penuh dengan 10 gambar, kita diminta unutk menampilkan status message "Download Success" dalam "status.txt", yang kemudian message tersebut kita enkripsi menggunakan caecar cipher shift 5. file txt tersebut diletakkan di dalam direktori, kemudian kita zip direktori tersebut dan menghapus file originalnya.
 
+Untuk membuat algorithm caesar cipher kita bisa menggunakan bilangan ascii dari masing-masing abjad, kemudian kita tambahkan sesuai shift dimana soal meminta shift 5. Untuk ascii yang melebehi 'z' atau 'Z' kita kurangkan dengan 'z' / 'Z' kemudian ditambah 'a' / 'A' dan dikurang 1.
+
+```
+	  for(int i = 0; message[i] != '\0'; ++i){
+		ch = message[i];
+		if(ch >= 'a' && ch <= 'z'){
+			ch = ch + key;
+			if(ch > 'z'){
+				ch = ch - 'z' + 'a' - 1;
+			}
+			message[i] = ch;
+		}
+		else if(ch >= 'A' && ch <= 'Z'){
+			ch = ch + key;
+			if(ch > 'Z'){
+				ch = ch - 'Z' + 'A' - 1;
+			}
+			message[i] = ch;
+		}
+	}
+
+```
+
+### Output Soal 3C
+![Output 3C](/img/soal3_c_caesar.JPG)
+
 ### Soal 3D
 Pada soal ini kita diminta unutk membuat program "Killer" yang executable,dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Program tersebut harus merupakan soal bash.
 
+Untuk membuat file killer.sh kita menggunakan fprintf.
+
+```
+	 FILE *killer;
+   killer = fopen("killer.sh", "w");
+
+```
+
 ### Soal 3E
 Kita diminta agar program dapat dijalankan di dalam dua mode. Untuk mengaktifkan mode pertama, program harus dijalankan dsdengan argumen -z, dan Ketika dijalankan dalam mode pertama, program utama akan langsung menghentikan semua operasinya Ketika program Killer dijalankan. Sedangkan untuk mengaktifkan mode kedua, program harus dijalankan dengan argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai
+
+Sebelum program dijalankan, kita harus mengecheck dulu apakah saat dijalankan user menambahkan "-x" atau "-z". Jika tidak maka akan langusng exit dan program tidak berjalan. Kemudian isi dari "killer.sh" bisa kita modifikasi sesuai input tadi.
+```
+	 if (strcmp(argv[1], "-z") == 0)
+      fprintf(killer, "#!/bin/bash\nkill -9 -%d\n rm killer.sh", getpid());
+   else if (strcmp(argv[1], "-x") == 0)
+      fprintf(killer, "#!/bin/bash\nkill %d\n rm killer.sh", getpid());
+
+```
+### Output 3E
+untuk penggunaan -x
+
+![Output 3E](/img/soal3_killer_x)
+
+Disini proses wget masih perjalan hingga zip selesai
+
+![Output 3E](/img/soal3_killer_x_hasil)
+
+untuk penggunaan -z
+
+![Output 3E](/img/soal3_killer_z)
+
+Disini seluruh proses langsung berhenti total
+
+![Output 3E](/img/soal3_killer_z_hasil)
